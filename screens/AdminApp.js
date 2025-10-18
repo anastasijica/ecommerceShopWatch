@@ -9,7 +9,7 @@ import AddProductScreen from './admin/AddProductScreen';
 import EditProductScreen from './admin/EditProductScreen';
 import OrdersScreen from './admin/OrdersScreen';
 import AdminProfileScreen from './admin/AdminProfileScreen';
-
+// Create navigators
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -24,7 +24,7 @@ function ProductsStack() {
       <Stack.Screen 
         name="EditProduct" 
         component={EditProductScreen}
-        options={{ title: 'Uredi proizvod' }}
+        options={{ title: 'Izmeni  proizvod' }}
       />
     </Stack.Navigator>
   );
