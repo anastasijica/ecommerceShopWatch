@@ -48,10 +48,10 @@ export default function CustomerApp() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#007AFF',
+        tabBarActiveTintColor: '#d25f5fff',
         tabBarInactiveTintColor: 'gray',
         headerStyle: {
-          backgroundColor: '#007AFF',
+          backgroundColor: '#d25f5fff',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {

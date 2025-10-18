@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   imageButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#d25f5fff',
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   addButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#d25f5fff',
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -293,8 +293,8 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   selectedCategoryButton: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: '#d25f5fff',
+    borderColor: '#d25f5fff',
   },
   categoryButtonText: {
     fontSize: 14,

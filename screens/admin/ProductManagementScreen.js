@@ -227,8 +227,8 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   selectedFilterButton: {
-    backgroundColor: '#007AFF',
-    borderColor: '#007AFF',
+    backgroundColor: '#d25f5fff',
+    borderColor: '#d25f5fff',
   },
   filterButtonText: {
     fontSize: 12,
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
   productPrice: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#d25f5fff',
   },
   productStock: {
     fontSize: 12,
@@ -322,10 +322,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   editButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#d25f5fff',
   },
   deleteButton: {
-    backgroundColor: '#ff4444',
+    backgroundColor: '#5a5656ff',
   },
   actionButtonText: {
     color: 'white',

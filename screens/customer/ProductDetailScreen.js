@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   backButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#d25f5fff',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 8,
@@ -258,7 +258,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#d25f5fff',
   },
   stockContainer: {
     alignItems: 'flex-end',
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   quantityButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#d25f5fff',
     width: 40,
     height: 40,
     borderRadius: 20,
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   addToCartButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#d25f5fff',
     paddingVertical: 15,
     borderRadius: 10,
     alignItems: 'center',

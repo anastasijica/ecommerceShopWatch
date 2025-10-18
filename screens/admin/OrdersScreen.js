@@ -69,7 +69,7 @@ export default function OrdersScreen() {
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending': return '#ff9500';
-      case 'processing': return '#007AFF';
+      case 'processing': return '#d25f5fff';
       case 'shipped': return '#34c759';
       case 'delivered': return '#30d158';
       case 'cancelled': return '#ff3b30';
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
   totalAmount: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#d25f5fff',
     marginBottom: 10,
   },
   itemsContainer: {
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   processButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#d25f5fff',
   },
   shipButton: {
     backgroundColor: '#34c759',

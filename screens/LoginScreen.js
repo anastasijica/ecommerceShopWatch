@@ -289,17 +289,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   primaryButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#d25f5fff',
   },
   secondaryButton: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: '#007AFF',
+    borderColor: '#d25f5fff',
   },
   guestButton: {
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: '#007AFF',
+    borderColor: '#d25f5fff',
   },
   buttonText: {
     fontSize: 16,
@@ -307,10 +307,10 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   secondaryButtonText: {
-    color: '#007AFF',
+    color: '#d25f5fff',
   },
   guestButtonText: {
-    color: '#007AFF',
+    color: '#d25f5fff',
   },
   adminInfo: {
     alignItems: 'center',
