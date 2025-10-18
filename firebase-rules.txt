@@ -1,0 +1,56 @@
+# Firebase Firestore Rules za E-commerce aplikaciju
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Products - svi mogu da čitaju, samo admini mogu da pišu
+    match /products/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+        (request.auth.token.email.matches(".*admin.*") || 
+         request.auth.token.email == "admin@example.com");
+    }
+    
+    // Orders - SVI mogu da kreiraju (uključujući goste)
+    match /orders/{document} {
+      allow read: if request.auth != null;
+      allow create: if true; // Svi mogu da kreiraju porudžbine
+      allow update, delete: if request.auth != null && 
+        (request.auth.token.email.matches(".*admin.*") || 
+         request.auth.token.email == "admin@example.com");
+    }
+    
+    // Users - dozvoli kreiranje tokom registracije, korisnici mogu da čitaju/pišu svoje podatke
+    match /users/{userId} {
+      allow read: if request.auth != null && 
+        (request.auth.uid == userId || 
+         request.auth.token.email.matches(".*admin.*") ||
+         request.auth.token.email == "admin@example.com");
+      allow create: if true; // ← KLJUČNA IZMENA - dozvoli kreiranje tokom registracije
+      allow update: if request.auth != null && 
+        (request.auth.uid == userId || 
+         request.auth.token.email.matches(".*admin.*") ||
+         request.auth.token.email == "admin@example.com");
+      allow delete: if request.auth != null && 
+        (request.auth.token.email.matches(".*admin.*") ||
+         request.auth.token.email == "admin@example.com");
+    }
+  }
+}
+
+# Objašnjenje pravila:
+# 
+# 1. Products:
+#    - Svi mogu da čitaju proizvode (customer i gosti)
+#    - Samo admini mogu da dodaju/uređuju/brišu proizvode
+#
+# 2. Orders:
+#    - Samo prijavljeni korisnici mogu da čitaju porudžbine
+#    - Svi mogu da kreiraju porudžbine (uključujući goste)
+#    - Samo admini mogu da ažuriraju/brišu porudžbine
+#
+# 3. Users:
+#    - Korisnici mogu da čitaju/uređuju svoje podatke
+#    - Admini mogu da čitaju/uređuju sve korisničke podatke
+#    - Samo admini mogu da brišu korisničke naloge
