@@ -4,14 +4,14 @@ const { mockProducts } = require('../utils/mockData.js');
 
 // Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyBFdFtA3GUBh7GCxtfd_peiDi5x6oZUOag",
-  authDomain: "ecommerce-app-6fc03.firebaseapp.com",
-  projectId: "ecommerce-app-6fc03",
-  storageBucket: "ecommerce-app-6fc03.firebasestorage.app",
-  messagingSenderId: "1051673128217",
-  appId: "1:1051673128217:web:e65a6e9dbc45d3d1942988"
+  apiKey: "AIzaSyDEyKNqRvvFNNKXx1cT0RElQfvxL-I48VY",
+  authDomain: "ecommercefirebasereact.firebaseapp.com",
+  projectId: "ecommercefirebasereact",
+  storageBucket: "ecommercefirebasereact.firebasestorage.app",
+  messagingSenderId: "122556819707",
+  appId: "1:122556819707:web:36bece96d243c0be60e85e",
+  measurementId: "G-SYMJN5TX6M"
 };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
