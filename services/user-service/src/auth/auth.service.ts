@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -16,7 +20,9 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    const existing = await this.userRepository.findOne({ where: { email: dto.email } });
+    const existing = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
     if (existing) {
       throw new ConflictException('Email vec postoji');
     }
@@ -29,13 +35,19 @@ export class AuthService {
     });
 
     const saved = await this.userRepository.save(user);
-    const token = this.jwtService.sign({ sub: saved.id, email: saved.email, role: saved.role });
+    const token = this.jwtService.sign({
+      sub: saved.id,
+      email: saved.email,
+      role: saved.role,
+    });
 
     return { token, user: this.sanitize(saved) };
   }
 
   async login(dto: LoginDto) {
-    const user = await this.userRepository.findOne({ where: { email: dto.email } });
+    const user = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
     if (!user) {
       throw new UnauthorizedException('Pogresni podaci');
     }
@@ -45,7 +57,11 @@ export class AuthService {
       throw new UnauthorizedException('Pogresni podaci');
     }
 
-    const token = this.jwtService.sign({ sub: user.id, email: user.email, role: user.role });
+    const token = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    });
     return { token, user: this.sanitize(user) };
   }
 
@@ -56,6 +72,7 @@ export class AuthService {
   }
 
   private sanitize(user: User) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordHash, ...rest } = user;
     return rest;
   }

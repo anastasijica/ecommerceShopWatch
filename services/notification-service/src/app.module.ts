@@ -14,7 +14,10 @@ import { HealthController } from './health/health.controller';
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
         exchanges: [{ name: 'order.exchange', type: 'topic' }],
-        uri: config.get('RABBITMQ_URI', 'amqp://guest:guest@localhost:5672'),
+        uri: config.get<string>(
+          'RABBITMQ_URI',
+          'amqp://guest:guest@localhost:5672',
+        ),
         connectionInitOptions: { wait: false },
       }),
       inject: [ConfigService],

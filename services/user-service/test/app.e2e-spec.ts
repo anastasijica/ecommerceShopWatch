@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '@nestjs/config';
 import { TerminusModule } from '@nestjs/terminus';
@@ -37,7 +36,10 @@ describe('UserService E2E', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({ isGlobal: true }),
-        JwtModule.register({ secret: 'test-secret', signOptions: { expiresIn: '7d' } }),
+        JwtModule.register({
+          secret: 'test-secret',
+          signOptions: { expiresIn: '7d' },
+        }),
         TerminusModule,
         HttpModule,
       ],
@@ -70,7 +72,11 @@ describe('UserService E2E', () => {
 
       const res = await request(app.getHttpServer())
         .post('/api/auth/register')
-        .send({ email: 'e2e@example.com', password: 'password123', displayName: 'E2E Korisnik' })
+        .send({
+          email: 'e2e@example.com',
+          password: 'password123',
+          displayName: 'E2E Korisnik',
+        })
         .expect(201);
 
       expect(res.body.token).toBeDefined();

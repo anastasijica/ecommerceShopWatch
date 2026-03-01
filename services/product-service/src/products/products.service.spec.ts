@@ -32,7 +32,10 @@ describe('ProductsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductsService,
-        { provide: getRepositoryToken(Product), useValue: mockProductRepository },
+        {
+          provide: getRepositoryToken(Product),
+          useValue: mockProductRepository,
+        },
       ],
     }).compile();
 
@@ -74,7 +77,9 @@ describe('ProductsService', () => {
     it('treba da baci NotFoundException ako proizvod ne postoji', async () => {
       mockProductRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne('nepostoji')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('nepostoji')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -100,15 +105,19 @@ describe('ProductsService', () => {
       mockProductRepository.findOne.mockResolvedValue(mockProduct);
       mockProductRepository.update.mockResolvedValue({ affected: 1 });
 
-      const result = await service.update('uuid-1', { price: 15000 });
+      await service.update('uuid-1', { price: 15000 });
 
-      expect(mockProductRepository.update).toHaveBeenCalledWith('uuid-1', { price: 15000 });
+      expect(mockProductRepository.update).toHaveBeenCalledWith('uuid-1', {
+        price: 15000,
+      });
     });
 
     it('treba da baci NotFoundException za nepostojeci proizvod', async () => {
       mockProductRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.update('nepostoji', { price: 100 })).rejects.toThrow(NotFoundException);
+      await expect(service.update('nepostoji', { price: 100 })).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

@@ -20,6 +20,7 @@ export class NotificationsService {
     routingKey: 'order.created',
     queue: 'notifications.order.created',
   })
+  // eslint-disable-next-line @typescript-eslint/require-await
   async handleOrderCreated(event: OrderCreatedEvent) {
     this.logger.log({
       message: 'Nova porudzbina primljena - saljemo notifikaciju',
