@@ -45,7 +45,10 @@ describe('ProductService E2E', () => {
       controllers: [ProductsController, MetricsController, HealthController],
       providers: [
         ProductsService,
-        { provide: getRepositoryToken(Product), useValue: mockProductRepository },
+        {
+          provide: getRepositoryToken(Product),
+          useValue: mockProductRepository,
+        },
       ],
     }).compile();
 
@@ -64,14 +67,18 @@ describe('ProductService E2E', () => {
   describe('GET /api/products', () => {
     it('treba da vrati listu proizvoda', async () => {
       mockProductRepository.find.mockResolvedValue([mockProduct]);
-      const res = await request(app.getHttpServer()).get('/api/products').expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/api/products')
+        .expect(200);
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body[0].name).toBe('Elegantni Sat');
     });
 
     it('treba da filtrira po kategoriji', async () => {
       mockProductRepository.find.mockResolvedValue([mockProduct]);
-      const res = await request(app.getHttpServer()).get('/api/products?category=watches').expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/api/products?category=watches')
+        .expect(200);
       expect(Array.isArray(res.body)).toBe(true);
     });
   });
@@ -79,13 +86,17 @@ describe('ProductService E2E', () => {
   describe('GET /api/products/:id', () => {
     it('treba da vrati jedan proizvod', async () => {
       mockProductRepository.findOne.mockResolvedValue(mockProduct);
-      const res = await request(app.getHttpServer()).get('/api/products/uuid-p1').expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/api/products/uuid-p1')
+        .expect(200);
       expect(res.body.id).toBe('uuid-p1');
     });
 
     it('treba da vrati 404 za nepostojeci ID', async () => {
       mockProductRepository.findOne.mockResolvedValue(null);
-      await request(app.getHttpServer()).get('/api/products/nepostoji').expect(404);
+      await request(app.getHttpServer())
+        .get('/api/products/nepostoji')
+        .expect(404);
     });
   });
 
@@ -112,14 +123,20 @@ describe('ProductService E2E', () => {
     it('treba da obrise proizvod', async () => {
       mockProductRepository.findOne.mockResolvedValue(mockProduct);
       mockProductRepository.remove.mockResolvedValue(mockProduct);
-      const res = await request(app.getHttpServer()).delete('/api/products/uuid-p1').expect(200);
+      const res = await request(app.getHttpServer())
+        .delete('/api/products/uuid-p1')
+        .expect(200);
       expect(res.body.message).toBe('Proizvod obrisan');
     });
   });
 
   describe('GET /api/health', () => {
     it('treba da vrati 200', async () => {
-      await request(app.getHttpServer()).get("/api/health").expect((res) => { expect([200, 503]).toContain(res.status); });
+      await request(app.getHttpServer())
+        .get('/api/health')
+        .expect((res) => {
+          expect([200, 503]).toContain(res.status);
+        });
     });
   });
 });

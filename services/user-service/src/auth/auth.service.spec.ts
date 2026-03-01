@@ -72,7 +72,10 @@ describe('AuthService', () => {
   describe('login', () => {
     it('treba da vrati token za ispravne kredencijale', async () => {
       const hashed = await bcrypt.hash('password123', 10);
-      mockUserRepository.findOne.mockResolvedValue({ ...mockUser, passwordHash: hashed });
+      mockUserRepository.findOne.mockResolvedValue({
+        ...mockUser,
+        passwordHash: hashed,
+      });
 
       const result = await service.login({
         email: 'test@example.com',
@@ -85,10 +88,16 @@ describe('AuthService', () => {
 
     it('treba da baci UnauthorizedException za pogresnu lozinku', async () => {
       // passwordHash ne odgovara - bcrypt.compare ce vratiti false
-      mockUserRepository.findOne.mockResolvedValue({ ...mockUser, passwordHash: 'wrong_hash' });
+      mockUserRepository.findOne.mockResolvedValue({
+        ...mockUser,
+        passwordHash: 'wrong_hash',
+      });
 
       await expect(
-        service.login({ email: 'test@example.com', password: 'pogresna_lozinka' }),
+        service.login({
+          email: 'test@example.com',
+          password: 'pogresna_lozinka',
+        }),
       ).rejects.toThrow(UnauthorizedException);
     });
 

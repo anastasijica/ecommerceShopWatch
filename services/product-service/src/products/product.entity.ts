@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export enum ProductCategory {
   WATCHES = 'watches',
@@ -25,7 +31,11 @@ export class Product {
   @Column({ nullable: true })
   imageUrl: string;
 
-  @Column({ type: 'enum', enum: ProductCategory, default: ProductCategory.WATCHES })
+  @Column({
+    type: 'enum',
+    enum: ProductCategory,
+    default: ProductCategory.WATCHES,
+  })
   category: ProductCategory;
 
   @CreateDateColumn()

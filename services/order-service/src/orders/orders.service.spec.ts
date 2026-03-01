@@ -81,7 +81,9 @@ describe('OrdersService', () => {
     it('treba da baci NotFoundException ako porudzbina ne postoji', async () => {
       mockOrderRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne('nepostoji')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('nepostoji')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

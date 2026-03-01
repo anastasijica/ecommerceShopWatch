@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export enum OrderStatus {
   PENDING = 'pending',
@@ -14,7 +20,12 @@ export class Order {
   id: string;
 
   @Column('jsonb')
-  items: Array<{ productId: string; name: string; price: number; quantity: number }>;
+  items: Array<{
+    productId: string;
+    name: string;
+    price: number;
+    quantity: number;
+  }>;
 
   @Column('decimal', { precision: 10, scale: 2 })
   totalAmount: number;

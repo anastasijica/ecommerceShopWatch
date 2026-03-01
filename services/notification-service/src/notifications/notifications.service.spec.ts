@@ -1,5 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationsService, OrderCreatedEvent } from './notifications.service';
+import {
+  NotificationsService,
+  OrderCreatedEvent,
+} from './notifications.service';
 
 const mockEvent: OrderCreatedEvent = {
   orderId: 'uuid-1',

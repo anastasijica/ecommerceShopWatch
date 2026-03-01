@@ -55,7 +55,9 @@ describe('OrderService E2E', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, transform: true }),
+    );
     app.setGlobalPrefix('api');
     await app.init();
   }, 15000);
@@ -69,7 +71,9 @@ describe('OrderService E2E', () => {
   describe('GET /api/orders', () => {
     it('treba da vrati sve porudzbine', async () => {
       mockOrderRepository.find.mockResolvedValue([mockOrder]);
-      const res = await request(app.getHttpServer()).get('/api/orders').expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/api/orders')
+        .expect(200);
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body[0].customerEmail).toBe('kupac@example.com');
     });
@@ -78,13 +82,17 @@ describe('OrderService E2E', () => {
   describe('GET /api/orders/:id', () => {
     it('treba da vrati jednu porudzbinu', async () => {
       mockOrderRepository.findOne.mockResolvedValue(mockOrder);
-      const res = await request(app.getHttpServer()).get('/api/orders/uuid-o1').expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/api/orders/uuid-o1')
+        .expect(200);
       expect(res.body.id).toBe('uuid-o1');
     });
 
     it('treba da vrati 404 za nepostojeci ID', async () => {
       mockOrderRepository.findOne.mockResolvedValue(null);
-      await request(app.getHttpServer()).get('/api/orders/nepostoji').expect(404);
+      await request(app.getHttpServer())
+        .get('/api/orders/nepostoji')
+        .expect(404);
     });
   });
 
@@ -116,14 +124,20 @@ describe('OrderService E2E', () => {
   describe('GET /api/orders/customer/:customerId', () => {
     it('treba da vrati porudzbine kupca', async () => {
       mockOrderRepository.find.mockResolvedValue([mockOrder]);
-      const res = await request(app.getHttpServer()).get('/api/orders/customer/user-1').expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/api/orders/customer/user-1')
+        .expect(200);
       expect(Array.isArray(res.body)).toBe(true);
     });
   });
 
   describe('GET /api/health', () => {
     it('treba da vrati 200', async () => {
-      await request(app.getHttpServer()).get("/api/health").expect((res) => { expect([200, 503]).toContain(res.status); });
+      await request(app.getHttpServer())
+        .get('/api/health')
+        .expect((res) => {
+          expect([200, 503]).toContain(res.status);
+        });
     });
   });
 });

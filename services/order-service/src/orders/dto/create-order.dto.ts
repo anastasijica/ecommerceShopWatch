@@ -1,4 +1,12 @@
-import { IsString, IsArray, IsNumber, IsEmail, IsOptional, ValidateNested, Min } from 'class-validator';
+import {
+  IsString,
+  IsArray,
+  IsNumber,
+  IsEmail,
+  IsOptional,
+  ValidateNested,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class OrderItemDto {

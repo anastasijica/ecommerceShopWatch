@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Put, Body, Param, Sse, MessageEvent } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  Sse,
+  MessageEvent,
+} from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -40,10 +49,7 @@ export class OrdersController {
   }
 
   @Put(':id/status')
-  updateStatus(
-    @Param('id') id: string,
-    @Body('status') status: OrderStatus,
-  ) {
+  updateStatus(@Param('id') id: string, @Body('status') status: OrderStatus) {
     return this.ordersService.updateStatus(id, status);
   }
 }

@@ -27,11 +27,12 @@ describe('NotificationService E2E', () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        ConfigModule.forRoot({ isGlobal: true }),
-        TerminusModule,
+      imports: [ConfigModule.forRoot({ isGlobal: true }), TerminusModule],
+      controllers: [
+        NotificationsController,
+        MetricsController,
+        HealthController,
       ],
-      controllers: [NotificationsController, MetricsController, HealthController],
       providers: [
         { provide: NotificationsService, useValue: mockNotificationsService },
       ],
@@ -48,13 +49,17 @@ describe('NotificationService E2E', () => {
 
   describe('GET /api/notifications', () => {
     it('treba da vrati listu notifikacija', async () => {
-      const res = await request(app.getHttpServer()).get('/api/notifications').expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/api/notifications')
+        .expect(200);
       expect(Array.isArray(res.body)).toBe(true);
       expect(res.body[0].orderId).toBe('uuid-1');
     });
 
     it('treba da vrati notifikacije sa ispravnim podacima', async () => {
-      const res = await request(app.getHttpServer()).get('/api/notifications').expect(200);
+      const res = await request(app.getHttpServer())
+        .get('/api/notifications')
+        .expect(200);
       expect(res.body[0].customerEmail).toBe('kupac@example.com');
       expect(res.body[0].totalAmount).toBe(12000);
     });
