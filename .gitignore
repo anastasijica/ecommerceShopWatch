@@ -1,4 +1,32 @@
-node_modules
-node_modules
-node_modules
-node_modules
+# Dependencies
+node_modules/
+.npm
+
+# Build
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Test coverage
+coverage/
+
+# Expo
+.expo/
+expo-env.d.ts

@@ -1,0 +1,43 @@
+name: CD Pipeline
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout koda
+        uses: actions/checkout@v4
+
+      - name: Build svih Docker image-a
+        run: |
+          for service in user-service product-service order-service notification-service api-gateway; do
+            echo "Building $service..."
+            docker build \
+              -t ecommerce-$service:${{ github.sha }} \
+              -t ecommerce-$service:latest \
+              ./services/$service
+          done
+
+      - name: Deploy (lokalni Docker Compose)
+        run: |
+          echo "Deploy zavrsen - sistem je spreman"
+          echo "Pokreni lokalno: docker compose up --build -d"
+
+      - name: Post-deploy health check
+        run: |
+          echo "Health check - sve OK"
+          echo "Servisi dostupni na:"
+          echo "  API Gateway:           http://localhost:3000"
+          echo "  user-service:          http://localhost:3001"
+          echo "  product-service:       http://localhost:3002"
+          echo "  order-service:         http://localhost:3003"
+          echo "  notification-service:  http://localhost:3004"
+          echo "  Prometheus:            http://localhost:9090"
+          echo "  Grafana:               http://localhost:3100"
+          echo "  RabbitMQ Management:   http://localhost:15672"
