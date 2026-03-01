@@ -3,13 +3,12 @@ import {
 } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { firstValueFrom } from 'rxjs';
 
 @Controller()
 export class ProxyController {
   private readonly logger = new Logger(ProxyController.name);
-
   private readonly serviceMap: Record<string, string>;
 
   constructor(
@@ -25,9 +24,10 @@ export class ProxyController {
     };
   }
 
-  @All('api/:service*')
+  @All('api/:service/(.*)')
   async proxy(@Req() req: Request, @Res() res: Response) {
-    const service = req.params.service;
+    const params = req.params as Record<string, string>;
+    const service = params['service'];
     const targetBase = this.serviceMap[service];
 
     if (!targetBase) {
@@ -45,7 +45,7 @@ export class ProxyController {
           data: req.body,
           headers: {
             'Content-Type': 'application/json',
-            ...(req.headers.authorization ? { Authorization: req.headers.authorization } : {}),
+            ...(req.headers.authorization ? { Authorization: req.headers.authorization as string } : {}),
           },
           validateStatus: () => true,
         }),
@@ -53,7 +53,7 @@ export class ProxyController {
 
       res.status(response.status).json(response.data);
     } catch (error) {
-      this.logger.error(`Proxy greska: ${error.message}`);
+      this.logger.error(`Proxy greska: ${(error as Error).message}`);
       throw new HttpException('Servis nije dostupan', HttpStatus.SERVICE_UNAVAILABLE);
     }
   }

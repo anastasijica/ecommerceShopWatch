@@ -28,7 +28,7 @@ import { HealthController } from './health/health.controller';
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([Order]),
-    RabbitMQModule.forRootAsync(RabbitMQModule, {
+    RabbitMQModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
         exchanges: [{ name: 'order.exchange', type: 'topic' }],
