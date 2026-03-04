@@ -1,0 +1,63 @@
+name: CD Pipeline
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  deploy:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout koda
+        uses: actions/checkout@v4
+
+      - name: Build svih Docker image-a
+        run: |
+          for service in user-service product-service order-service notification-service api-gateway; do
+            echo "Building $service..."
+            docker build \
+              -t ecommerce-$service:${{ github.sha }} \
+              -t ecommerce-$service:latest \
+              ./services/$service
+          done
+
+      - name: Deploy (Docker Compose)
+        run: |
+          docker compose up --build -d
+
+      - name: Post-deploy health check
+        run: |
+          set -e
+          endpoints=(
+            "http://localhost:3000/health"
+            "http://localhost:3001/api/health"
+            "http://localhost:3002/api/health"
+            "http://localhost:3003/api/health"
+            "http://localhost:3004/api/health"
+          )
+
+          for endpoint in "${endpoints[@]}"; do
+            echo "Checking $endpoint"
+            for attempt in {1..24}; do
+              if curl -fsS "$endpoint" > /dev/null; then
+                echo "OK: $endpoint"
+                break
+              fi
+
+              if [ "$attempt" -eq 24 ]; then
+                echo "FAILED: $endpoint"
+                docker compose logs
+                exit 1
+              fi
+
+              sleep 5
+            done
+          done
+
+      - name: Teardown deploy okruzenja
+        if: always()
+        run: |
+          docker compose down -v
