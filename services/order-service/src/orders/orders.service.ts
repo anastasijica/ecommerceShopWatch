@@ -38,7 +38,7 @@ export class OrdersService {
     return order;
   }
 
-  async create(dto: CreateOrderDto) {
+  async create(dto: CreateOrderDto, traceId?: string) {
     const order = this.orderRepository.create(dto);
     const saved = await this.orderRepository.save(order);
 
@@ -50,6 +50,7 @@ export class OrdersService {
       totalAmount: saved.totalAmount,
       items: saved.items,
       createdAt: saved.createdAt,
+      traceId,
     });
 
     // Emituj SSE event

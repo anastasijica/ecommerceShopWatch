@@ -11,6 +11,11 @@ import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import type { Request, Response } from 'express';
 import { firstValueFrom } from 'rxjs';
+import {
+  gatewayRequestDuration,
+  gatewayRequestTotal,
+} from '../metrics/metrics.controller';
+import { randomUUID } from 'crypto';
 
 @Controller()
 export class ProxyController {
@@ -37,9 +42,28 @@ export class ProxyController {
   async proxy(@Req() req: Request, @Res() res: Response) {
     const params = req.params as Record<string, string>;
     const service = params['service'];
+    const startedAt = process.hrtime.bigint();
+    const traceHeader = req.headers['x-trace-id'];
+    const traceId = Array.isArray(traceHeader)
+      ? (traceHeader[0] ?? randomUUID())
+      : (traceHeader ?? randomUUID());
+    res.setHeader('x-trace-id', traceId);
+
     const targetBase = this.serviceMap[service];
+    const metricService = service || 'unknown';
 
     if (!targetBase) {
+      const durationSeconds =
+        Number(process.hrtime.bigint() - startedAt) / 1_000_000_000;
+      gatewayRequestTotal.inc({
+        method: req.method,
+        service: metricService,
+        status: '404',
+      });
+      gatewayRequestDuration.observe(
+        { method: req.method, service: metricService },
+        durationSeconds,
+      );
       throw new HttpException(
         `Servis '${service}' nije pronadjen`,
         HttpStatus.NOT_FOUND,
@@ -50,6 +74,15 @@ export class ProxyController {
     this.logger.log(`Proxy: ${req.method} ${req.path} → ${targetUrl}`);
 
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'x-trace-id': traceId,
+      };
+      const authHeader = req.headers.authorization;
+      if (typeof authHeader === 'string') {
+        headers.Authorization = authHeader;
+      }
+
       const response = await firstValueFrom(
         this.httpService.request({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -57,19 +90,47 @@ export class ProxyController {
           url: targetUrl,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           data: req.body,
-          headers: {
-            'Content-Type': 'application/json',
-            ...(req.headers.authorization
-              ? { Authorization: req.headers.authorization }
-              : {}),
-          },
+          headers,
           validateStatus: () => true,
         }),
       );
 
+      const durationSeconds =
+        Number(process.hrtime.bigint() - startedAt) / 1_000_000_000;
+      gatewayRequestTotal.inc({
+        method: req.method,
+        service: metricService,
+        status: String(response.status),
+      });
+      gatewayRequestDuration.observe(
+        { method: req.method, service: metricService },
+        durationSeconds,
+      );
+      this.logger.log(
+        JSON.stringify({
+          traceId,
+          method: req.method,
+          service: metricService,
+          statusCode: response.status,
+          durationSeconds: Number(durationSeconds.toFixed(6)),
+        }),
+      );
       res.status(response.status).json(response.data);
     } catch (error) {
-      this.logger.error(`Proxy greska: ${(error as Error).message}`);
+      const durationSeconds =
+        Number(process.hrtime.bigint() - startedAt) / 1_000_000_000;
+      gatewayRequestTotal.inc({
+        method: req.method,
+        service: metricService,
+        status: '503',
+      });
+      gatewayRequestDuration.observe(
+        { method: req.method, service: metricService },
+        durationSeconds,
+      );
+      this.logger.error(
+        `Proxy greska traceId=${traceId}: ${(error as Error).message}`,
+      );
       throw new HttpException(
         'Servis nije dostupan',
         HttpStatus.SERVICE_UNAVAILABLE,

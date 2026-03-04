@@ -5,6 +5,7 @@ import {
   Put,
   Body,
   Param,
+  Headers,
   Sse,
   MessageEvent,
 } from '@nestjs/common';
@@ -44,8 +45,8 @@ export class OrdersController {
   }
 
   @Post()
-  create(@Body() dto: CreateOrderDto) {
-    return this.ordersService.create(dto);
+  create(@Body() dto: CreateOrderDto, @Headers('x-trace-id') traceId?: string) {
+    return this.ordersService.create(dto, traceId);
   }
 
   @Put(':id/status')

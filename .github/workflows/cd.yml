@@ -24,20 +24,40 @@ jobs:
               ./services/$service
           done
 
-      - name: Deploy (lokalni Docker Compose)
+      - name: Deploy (Docker Compose)
         run: |
-          echo "Deploy zavrsen - sistem je spreman"
-          echo "Pokreni lokalno: docker compose up --build -d"
+          docker compose up --build -d
 
       - name: Post-deploy health check
         run: |
-          echo "Health check - sve OK"
-          echo "Servisi dostupni na:"
-          echo "  API Gateway:           http://localhost:3000"
-          echo "  user-service:          http://localhost:3001"
-          echo "  product-service:       http://localhost:3002"
-          echo "  order-service:         http://localhost:3003"
-          echo "  notification-service:  http://localhost:3004"
-          echo "  Prometheus:            http://localhost:9090"
-          echo "  Grafana:               http://localhost:3100"
-          echo "  RabbitMQ Management:   http://localhost:15672"
+          set -e
+          endpoints=(
+            "http://localhost:3000/health"
+            "http://localhost:3001/api/health"
+            "http://localhost:3002/api/health"
+            "http://localhost:3003/api/health"
+            "http://localhost:3004/api/health"
+          )
+
+          for endpoint in "${endpoints[@]}"; do
+            echo "Checking $endpoint"
+            for attempt in {1..24}; do
+              if curl -fsS "$endpoint" > /dev/null; then
+                echo "OK: $endpoint"
+                break
+              fi
+
+              if [ "$attempt" -eq 24 ]; then
+                echo "FAILED: $endpoint"
+                docker compose logs
+                exit 1
+              fi
+
+              sleep 5
+            done
+          done
+
+      - name: Teardown deploy okruzenja
+        if: always()
+        run: |
+          docker compose down -v

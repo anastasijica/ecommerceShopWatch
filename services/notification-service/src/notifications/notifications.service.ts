@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
+import { notificationsTotal } from '../metrics/metrics.controller';
 
 export interface OrderCreatedEvent {
   orderId: string;
@@ -8,6 +9,7 @@ export interface OrderCreatedEvent {
   totalAmount: number;
   items: Array<{ name: string; quantity: number; price: number }>;
   createdAt: string;
+  traceId?: string;
 }
 
 @Injectable()
@@ -22,11 +24,14 @@ export class NotificationsService {
   })
   // eslint-disable-next-line @typescript-eslint/require-await
   async handleOrderCreated(event: OrderCreatedEvent) {
+    notificationsTotal.inc({ type: 'order.created' });
+
     this.logger.log({
       message: 'Nova porudzbina primljena - saljemo notifikaciju',
       orderId: event.orderId,
       customerEmail: event.customerEmail,
       totalAmount: event.totalAmount,
+      traceId: event.traceId ?? 'n/a',
     });
 
     // Cuvamo notifikaciju u memoriji (za demo)
@@ -37,6 +42,7 @@ export class NotificationsService {
       message: `Email notifikacija poslana na ${event.customerEmail}`,
       subject: `Potvrda porudzbine #${event.orderId}`,
       totalAmount: event.totalAmount,
+      traceId: event.traceId ?? 'n/a',
     });
   }
 
