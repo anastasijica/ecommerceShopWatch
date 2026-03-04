@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # ─── Databases ──────────────────────────────────────────────────
   postgres-users:
@@ -72,6 +70,8 @@ services:
     build:
       context: ./services/user-service
       dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
     environment:
       PORT: 3001
       DB_HOST: postgres-users
@@ -95,6 +95,8 @@ services:
     build:
       context: ./services/product-service
       dockerfile: Dockerfile
+    ports:
+      - "3002:3002"
     environment:
       PORT: 3002
       DB_HOST: postgres-products
@@ -117,6 +119,8 @@ services:
     build:
       context: ./services/order-service
       dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
     environment:
       PORT: 3003
       DB_HOST: postgres-orders
@@ -142,6 +146,8 @@ services:
     build:
       context: ./services/notification-service
       dockerfile: Dockerfile
+    ports:
+      - "3004:3004"
     environment:
       PORT: 3004
       RABBITMQ_URI: amqp://guest:guest@rabbitmq:5672
